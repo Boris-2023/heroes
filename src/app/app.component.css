@@ -8,14 +8,17 @@ nav a {
   margin-left: 10px;
   margin-top: 10px;
   display: inline-block;
-  background-color: #e8e8e8;
+  background-color: #d4dee8;
   color: #3d3d3d;
   border-radius: 4px;
+  width: 90px;
+  text-align: center;
+  font-weight: bold;
 }
 
 nav a:hover {
   color: white;
-  background-color: #42545C;
+  background-color: #2a7dea;
 }
 nav a:active {
   background-color: black;

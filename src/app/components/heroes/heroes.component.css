@@ -8,10 +8,13 @@
 
 input {
   display: block;
-  width: 100%;
+  width: 30%;
+  min-width: 200px;
+  max-width: 600px;
   padding: .5rem;
-  margin: 1rem 0;
+  margin: .5rem 0;
   box-sizing: border-box;
+  font-size: 1.1rem;
 }
 
 .heroes li {
@@ -65,6 +68,7 @@ input {
 .add-button {
   padding: .5rem 1.5rem;
   font-size: 1rem;
+  font-family: Arial, sans-serif;
   margin-bottom: 2rem;
 }
 
@@ -75,16 +79,16 @@ input {
 
 button.delete {
   position: absolute;
-  left: 210px;
+  right: 1px;
   top: 5px;
-  background-color: white;
-  color:  #525252;
+  background-color: #e16c6c;
+  color:  white;
   font-size: 1.1rem;
   margin: 0;
   padding: 1px 10px 3px 10px;
 }
 
 button.delete:hover {
-  background-color: #525252;
+  background-color: #bd2323;
   color: white;
 }
