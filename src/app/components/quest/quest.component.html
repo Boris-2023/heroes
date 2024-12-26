@@ -1,0 +1,16 @@
+<div class="quest-container">
+  <candles
+    style="height: 800px"
+    *ngIf="isDataLoaded()"
+    [sourceData]="currentData"
+    [avesWndList]="movingAvesList"
+    [pipDecimals]="pipDecimals"
+    [predictMoveValue]="convertUnitsToPips()"
+    [forecastPeriod]="forecastPeriod"
+    [dataPosition]="dataPosition"
+    [predictDirection]="predictDirection"
+    [chartNumber]="chartNumber"
+    [totalNumberOfCharts]="totalNumberOfCharts"
+  ></candles>
+</div>
+
