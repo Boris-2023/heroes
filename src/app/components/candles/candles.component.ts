@@ -1,16 +1,7 @@
-import {Component, Input, OnInit} from "@angular/core";
+import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from "@angular/core";
 import {EChartsOption} from 'echarts';
 import {EchartsxModule} from "echarts-for-angular";
-import {CandlestickChart, LineChart} from "echarts/charts";
-import {
-  TooltipComponent,
-  GridComponent,
-  LegendComponent,
-  TitleComponent,
-  DataZoomComponent,
-  VisualMapComponent
-} from "echarts/components";
-
+import * as echarts from 'echarts';
 
 @Component({
   selector: "candles",
@@ -22,7 +13,7 @@ import {
   styleUrl: './candles.component.css'
 })
 
-export class CandlesComponent implements OnInit {
+export class CandlesComponent implements AfterViewInit {
 
   // ------> data to input / request
   @Input() sourceData: any[] = [];
@@ -35,10 +26,8 @@ export class CandlesComponent implements OnInit {
   @Input() chartNumber: number = 1;
   @Input() totalNumberOfCharts: number = 30;
 
+  @ViewChild('chartContainer') chartContainer!: ElementRef;
 
-  //readonly chartService: ChartService;
-  readonly echartsExtensions: any[];
-  public echartsOptions: EChartsOption = {};
   private linesToDraw: any[] = [];
   private drawCandlesVariants: any[][] = [];
   private categoryData: number[] = [];
@@ -59,33 +48,26 @@ export class CandlesComponent implements OnInit {
   private readonly targetLinesOpacity = 1;
   private readonly plotPaddingRight = 2;
 
-  constructor() {
-    this.echartsExtensions = [
-      CandlestickChart,
-      LineChart,
-      TooltipComponent,
-      GridComponent,
-      LegendComponent,
-      TitleComponent,
-      DataZoomComponent,
-      VisualMapComponent
-    ];
-  }
+  private myChart: any;
 
-  ngOnInit() {
+  ngAfterViewInit() {
 
     // console.log(this.sourceData);
 
-    this.makeCandlesDataOutcomes(this.sourceData);
+    setTimeout(() => { // to ensure the parent container size is received by the chart
+      this.makeCandlesDataOutcomes(this.sourceData);
+      this.myChart = echarts.init(this.chartContainer.nativeElement);
 
-    this.upTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
-      + +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
-    this.dnTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
-      - +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
+      this.upTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
+        + +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
+      this.dnTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
+        - +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
 
-    this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
+      this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
 
-    this.echartsOptions = this.setChartOptions();
+      this.myChart.setOption(this.setChartOptions());
+      // this.myChart.resize();
+    }, 50); // Delay of 0ms ensures the code runs after the current call stack is cleared
   }
 
   private makeCandlesDataOutcomes(rawData: (number | string)[][]) {
@@ -218,8 +200,8 @@ export class CandlesComponent implements OnInit {
       backgroundColor: this.chartBgColor,
       title: {
         text: "График № " + this.chartNumber + "/" + this.totalNumberOfCharts,
-        top: '2%',
-        left: '8%'
+        top: '1%',
+        left: '8%',
       },
       tooltip: {
         trigger: 'item',// 'none' - cross & values on the axes, 'axis' - all values for xAxis coord
@@ -232,8 +214,6 @@ export class CandlesComponent implements OnInit {
         data: [
           'Data',
           ...this.linesToDraw.map(x => x.name),// add lines names, like averages
-          // 'Target_UP',
-          // "Target_DN"
         ],
         bottom: 5,
         itemHeight: 7,
@@ -359,6 +339,13 @@ export class CandlesComponent implements OnInit {
       ],
     };
     return options;
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (this.myChart) {
+      this.myChart.resize();
+    }
   }
 
 }

@@ -4,6 +4,7 @@
 import {NgIf} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {EchartsxModule} from 'echarts-for-angular';
 import {CandlesComponent} from '../candles/candles.component';
 import {ChartService} from '../../services/chart.service';
 
@@ -13,7 +14,8 @@ import {ChartService} from '../../services/chart.service';
   imports: [
     CandlesComponent,
     NgIf,
-    FormsModule
+    FormsModule,
+    EchartsxModule
   ],
   standalone: true,
   styleUrl: './quest.component.css'

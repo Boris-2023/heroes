@@ -1,13 +1,7 @@
-@media screen and (orientation: portrait) {
-  .demo-chart {
-    width: 97vw;
-    height: 98vh;
-  }
-}
-
-@media screen and (orientation: landscape) {
-  .demo-chart {
-    width: 98vw;
-    height: 97vh;
-  }
+#chart-container {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
