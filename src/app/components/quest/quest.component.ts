@@ -15,7 +15,7 @@ import {ChartService} from '../../services/chart.service';
     CandlesComponent,
     NgIf,
     FormsModule,
-    EchartsxModule
+    EchartsxModule,
   ],
   standalone: true,
   styleUrl: './quest.component.css'
@@ -31,15 +31,16 @@ export class QuestComponent implements OnInit {
   public forecastPeriod = 20;
   public dataPosition: number = 1;
 
-  public predictDirection: number = -1;
+  public predictDirection: string;
   public chartNumber: number = 1;
   public totalNumberOfCharts: number = 50;
   public currentData: any[][] = [];
-  public chartService;
+  public chartService: ChartService;
 
   constructor() {
     this.chartService = new ChartService();
     this.wholeSourceData = this.loadWholeData();
+    this.predictDirection = '0';
   }
 
   ngOnInit() {
@@ -61,5 +62,6 @@ export class QuestComponent implements OnInit {
   public isDataLoaded() {
     return !!this.currentData;
   }
+
 
 }

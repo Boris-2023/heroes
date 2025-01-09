@@ -1,4 +1,15 @@
-import {AfterViewInit, Component, ElementRef, HostListener, Input, OnInit, ViewChild} from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  Input,
+  Output,
+  ViewChild
+} from "@angular/core";
+import {FormsModule} from '@angular/forms';
+import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
 import {EChartsOption} from 'echarts';
 import {EchartsxModule} from "echarts-for-angular";
 import * as echarts from 'echarts';
@@ -8,7 +19,10 @@ import * as echarts from 'echarts';
   templateUrl: './candles.component.html',
   standalone: true,
   imports: [
-    EchartsxModule
+    EchartsxModule,
+    MatRadioButton,
+    MatRadioGroup,
+    FormsModule
   ],
   styleUrl: './candles.component.css'
 })
@@ -22,9 +36,11 @@ export class CandlesComponent implements AfterViewInit {
   @Input() predictMoveValue: number = 200 * Math.pow(10, this.pipDecimals);
   @Input() forecastPeriod = 20;
   @Input() dataPosition: number = 1;
-  @Input() predictDirection: number = 0;
   @Input() chartNumber: number = 1;
   @Input() totalNumberOfCharts: number = 30;
+
+  @Input() predictDirection: string = '0';
+  @Output() predictDirectionChange = new EventEmitter<string>();
 
   @ViewChild('chartContainer') chartContainer!: ElementRef;
 
@@ -52,11 +68,8 @@ export class CandlesComponent implements AfterViewInit {
 
   ngAfterViewInit() {
 
-    // console.log(this.sourceData);
-
     setTimeout(() => { // to ensure the parent container size is received by the chart
       this.makeCandlesDataOutcomes(this.sourceData);
-      this.myChart = echarts.init(this.chartContainer.nativeElement);
 
       this.upTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
         + +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
@@ -65,9 +78,10 @@ export class CandlesComponent implements AfterViewInit {
 
       this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
 
+      this.myChart = echarts.init(this.chartContainer.nativeElement);
       this.myChart.setOption(this.setChartOptions());
-      // this.myChart.resize();
-    }, 50); // Delay of 0ms ensures the code runs after the current call stack is cleared
+
+    }, 1); // Delay of 0ms ensures the code runs after the current call stack is cleared
   }
 
   private makeCandlesDataOutcomes(rawData: (number | string)[][]) {
@@ -79,9 +93,7 @@ export class CandlesComponent implements AfterViewInit {
 
     let values: any[][] = [];
 
-    rawData.forEach(x => x.splice(0, 1)); // remove dates - 1st column
     for (let i = 0; i < this.realDataLength; i++) {
-      // rawData[i].splice(0, 1);// delete element indexed 0
       values.push(rawData[i])
     }
 
@@ -114,7 +126,7 @@ export class CandlesComponent implements AfterViewInit {
 
   private movingAverage(wnd: number) {
     let result: (number | string)[] = [];
-    const currentData = this.drawCandlesVariants[this.predictDirection + 1]; // current data to draw candles: 0 -> dn predict, 1 -> no predict, 2 -> up predict
+    const currentData = this.drawCandlesVariants[+this.predictDirection + 1]; // current data to draw candles: 0 -> dn predict, 1 -> no predict, 2 -> up predict
 
     let sum = 0;
     for (let i = 0; i < (wnd - 1); i++) {
@@ -196,12 +208,12 @@ export class CandlesComponent implements AfterViewInit {
   }
 
   private setChartOptions() {
-    const options: EChartsOption = {
+    let options: EChartsOption = {
       backgroundColor: this.chartBgColor,
       title: {
-        text: "График № " + this.chartNumber + "/" + this.totalNumberOfCharts,
+        text: "График № " + this.chartNumber + " / " + this.totalNumberOfCharts,
         top: '1%',
-        left: '8%',
+        left: '7%'
       },
       tooltip: {
         trigger: 'item',// 'none' - cross & values on the axes, 'axis' - all values for xAxis coord
@@ -215,17 +227,17 @@ export class CandlesComponent implements AfterViewInit {
           'Data',
           ...this.linesToDraw.map(x => x.name),// add lines names, like averages
         ],
-        bottom: 5,
-        itemHeight: 7,
-        borderColor: 'rgb(6,24,47)',
+        bottom: '1.5%',
+        itemHeight: 10,
+        borderColor: 'rgb(0, 100, 0)',
         borderWidth: .5,
-        borderRadius: 5
+        borderRadius: 3,
       },
       grid: {
         top: '8%',
-        left: '8%',
-        right: '5%',
-        bottom: '20%',
+        left: '7%',
+        right: '3%',
+        bottom: '22%',
         show: true,
       },
       xAxis: {
@@ -255,7 +267,8 @@ export class CandlesComponent implements AfterViewInit {
         {
           show: true, // for xoom by the slider outside the plot
           type: 'slider',
-          bottom: '7%',
+          bottom: '9%',
+          left: '6.5%',
           height: '8%',
           start: 0,
           end: 100,
@@ -283,7 +296,7 @@ export class CandlesComponent implements AfterViewInit {
         {
           name: 'Data',
           type: 'candlestick',
-          data: this.drawCandlesVariants[this.predictDirection + 1], // variants: -1 -> down predict, 0 -> no predict, 1 -> up predict
+          data: this.drawCandlesVariants[+this.predictDirection + 1], // variants: -1 -> down predict, 0 -> no predict, 1 -> up predict
           itemStyle: {
             color: this.upColor,
             color0: this.downColor,
@@ -346,6 +359,15 @@ export class CandlesComponent implements AfterViewInit {
     if (this.myChart) {
       this.myChart.resize();
     }
+  }
+
+  // listens the radio-group to select predict direction
+  onPredictDirectionChange() {
+    this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
+    this.myChart.setOption(this.setChartOptions());
+    this.myChart.resize();
+
+    this.predictDirectionChange.emit(this.predictDirection);
   }
 
 }

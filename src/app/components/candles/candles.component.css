@@ -5,3 +5,12 @@
   margin: 0;
   box-sizing: border-box;
 }
+
+.radio-buttons-predict-choice {
+  color: #004200;
+  font-size: 22px;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-evenly;
+  margin-top: 5px;
+}

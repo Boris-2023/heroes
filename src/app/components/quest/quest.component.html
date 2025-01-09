@@ -7,9 +7,10 @@
     [predictMoveValue]="convertUnitsToPips()"
     [forecastPeriod]="forecastPeriod"
     [dataPosition]="dataPosition"
-    [predictDirection]="predictDirection"
+    [(predictDirection)]="predictDirection"
     [chartNumber]="chartNumber"
     [totalNumberOfCharts]="totalNumberOfCharts"
   ></candles>
+  <p>{{ predictDirection }}</p>
 </div>
 
