@@ -7,10 +7,16 @@
     [predictMoveValue]="convertUnitsToPips()"
     [forecastPeriod]="forecastPeriod"
     [dataPosition]="dataPosition"
-    [(predictDirection)]="predictDirection"
+    [(predictDirection)]="predictDirectionArray[chartNumber - 1]"
     [chartNumber]="chartNumber"
     [totalNumberOfCharts]="totalNumberOfCharts"
   ></candles>
-  <p>{{ predictDirection }}</p>
 </div>
+<div class="chart-list-buttons">
+  <button class="chart-list-button" (click)="clickBack()">BACK</button>
+  <button class="chart-list-button" (click)="clickNext()">NEXT</button>
+</div>
+
+<p>Chart Num: {{ chartNumber }}</p>
+<p>Direction: {{ predictDirectionArray[chartNumber - 1] }}</p>
 

@@ -6,11 +6,11 @@
   box-sizing: border-box;
 }
 
-.radio-buttons-predict-choice {
+.radio-buttons-predict-choice-group {
   color: #004200;
   font-size: 22px;
   font-weight: bold;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: center;
   margin-top: 5px;
 }

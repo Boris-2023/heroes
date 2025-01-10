@@ -4,8 +4,8 @@ import {
   ElementRef,
   EventEmitter,
   HostListener,
-  Input,
-  Output,
+  Input, OnChanges,
+  Output, SimpleChanges,
   ViewChild
 } from "@angular/core";
 import {FormsModule} from '@angular/forms';
@@ -27,11 +27,11 @@ import * as echarts from 'echarts';
   styleUrl: './candles.component.css'
 })
 
-export class CandlesComponent implements AfterViewInit {
+export class CandlesComponent implements AfterViewInit, OnChanges {
 
   // ------> data to input / request
   @Input() sourceData: any[] = [];
-  @Input() avesWndList = [5, 13, 21, 34]; // choice of the user in selection component
+  @Input() avesWndList = [5]; // choice of the user in selection component
   @Input() pipDecimals: number = 2;
   @Input() predictMoveValue: number = 200 * Math.pow(10, this.pipDecimals);
   @Input() forecastPeriod = 20;
@@ -39,7 +39,7 @@ export class CandlesComponent implements AfterViewInit {
   @Input() chartNumber: number = 1;
   @Input() totalNumberOfCharts: number = 30;
 
-  @Input() predictDirection: string = '0';
+  @Input() predictDirection!: string;
   @Output() predictDirectionChange = new EventEmitter<string>();
 
   @ViewChild('chartContainer') chartContainer!: ElementRef;
@@ -211,9 +211,9 @@ export class CandlesComponent implements AfterViewInit {
     let options: EChartsOption = {
       backgroundColor: this.chartBgColor,
       title: {
-        text: "График № " + this.chartNumber + " / " + this.totalNumberOfCharts,
+        text: "Chart # " + this.chartNumber + " / " + this.totalNumberOfCharts,
         top: '1%',
-        left: '7%'
+        left: '40%',
       },
       tooltip: {
         trigger: 'item',// 'none' - cross & values on the axes, 'axis' - all values for xAxis coord
@@ -268,7 +268,7 @@ export class CandlesComponent implements AfterViewInit {
           show: true, // for xoom by the slider outside the plot
           type: 'slider',
           bottom: '9%',
-          left: '6.5%',
+          left: '7%',
           height: '8%',
           start: 0,
           end: 100,
@@ -361,13 +361,20 @@ export class CandlesComponent implements AfterViewInit {
     }
   }
 
-  // listens the radio-group to select predict direction
+  // listens to the radio-group in this component to select predict direction & send it to parent Quest
   onPredictDirectionChange() {
     this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
     this.myChart.setOption(this.setChartOptions());
     this.myChart.resize();
 
     this.predictDirectionChange.emit(this.predictDirection);
+  }
+
+  // monitors chart number change in parent Quest component
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['chartNumber']) {
+      this.ngAfterViewInit(); // redraw the chart
+    }
   }
 
 }

@@ -7,3 +7,26 @@
   box-sizing: border-box;
 }
 
+.chart-list-buttons {
+  margin-left: 25px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.chart-list-button {
+  font-weight: bold;
+  font-size: 22px;
+  font-family: "Calibri", sans-serif;
+  background-color: rgba(10, 87, 1, 0.40);
+  color: #063601;
+  width: 15%;
+}
+
+.chart-list-button:hover {
+  color: white;
+  background-color: #0a5701;
+}
+
+.chart-list-button:active {
+  background-color: green;
+}
