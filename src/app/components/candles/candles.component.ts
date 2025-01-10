@@ -32,8 +32,8 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
   // ------> data to input / request
   @Input() sourceData: any[] = [];
   @Input() avesWndList = [5]; // choice of the user in selection component
-  @Input() pipDecimals: number = 2;
-  @Input() predictMoveValue: number = 200 * Math.pow(10, this.pipDecimals);
+  @Input() pipDecimals!: number;
+  @Input() predictMoveValue!: number;
   @Input() forecastPeriod = 20;
   @Input() dataPosition: number = 1;
   @Input() chartNumber: number = 1;
@@ -71,6 +71,8 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
     setTimeout(() => { // to ensure the parent container size is received by the chart
       this.makeCandlesDataOutcomes(this.sourceData);
 
+      console.log("PipDecimals = " + this.pipDecimals + "\nPredict move value: " + this.predictMoveValue);
+
       this.upTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
         + +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
       this.dnTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
@@ -78,10 +80,11 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
 
       this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
 
-      this.myChart = echarts.init(this.chartContainer.nativeElement);
+      if(!this.myChart) this.myChart = echarts.init(this.chartContainer.nativeElement);
+
       this.myChart.setOption(this.setChartOptions());
 
-    }, 1); // Delay of 0ms ensures the code runs after the current call stack is cleared
+    }, 0); // Delay of 0ms ensures the code runs after the current call stack is cleared
   }
 
   private makeCandlesDataOutcomes(rawData: (number | string)[][]) {

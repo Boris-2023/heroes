@@ -25,23 +25,29 @@ export class QuestComponent implements OnInit {
 
   // ------> data to input / request
   public movingAvesList = [3, 5, 8, 21, 34]; // choice of the user in selection component
-  public pipDecimals: number = 2;
-  public predictMoveInUnits: number = 200;
-  public wholeSourceData: any[][][] = [];
   public forecastPeriod = 20;
   public dataPosition: number = 1;
 
+  public wholeSourceData: any[] = [];
   public predictDirectionArray: string[] = [];
+  public predictMoveValues: number[] = [];
+  public pipDecimalValues: number[] = [];
+
   public chartNumber: number = 1;
   public totalNumberOfCharts: number;
   public currentData: any[][] = [];
   public chartService: ChartService;
 
   constructor() {
+
     this.chartService = new ChartService();
-    this.wholeSourceData = this.loadWholeData();
+
+    console.log(this.predictMoveValues);
+
+    this.loadWholeData();
 
     this.totalNumberOfCharts = this.wholeSourceData.length;
+
     for (let i = 0; i < this.totalNumberOfCharts; i++) { //init predict direction array for all the charts to pass through
       this.predictDirectionArray.push('0');
     }
@@ -51,16 +57,15 @@ export class QuestComponent implements OnInit {
     this.currentData = this.provideCurrentData();
   }
 
-  public convertUnitsToPips() {
-    return this.predictMoveInUnits * Math.pow(10, this.pipDecimals);
-  }
-
   protected provideCurrentData() {
     return this.wholeSourceData[this.chartNumber - 1];
   }
 
   protected loadWholeData() {
-    return this.chartService.getCandlesData();
+    const result = this.chartService.getCandlesData();
+    this.wholeSourceData = result.candlesArray;
+    this.pipDecimalValues = result.pipDecimals;
+    this.predictMoveValues = result.predictMoveValues;
   }
 
   public isDataLoaded() {
