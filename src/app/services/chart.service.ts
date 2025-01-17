@@ -15,8 +15,8 @@ export class ChartService {
     // process service (last) line from input data
     candlesArray.forEach(cd => {
       let serviceLine = cd[cd.length - 1]; // gets service line
-      pipDecimals.push(serviceLine[0]); // saves pip decimals from input data array
-      predictMoveValues.push(serviceLine[1] * Math.pow(10, serviceLine[0])); // saves predict expected move value converted to pips
+      pipDecimals.push(serviceLine[0]); // saves pip decimals from input data array, separately for every chart
+      predictMoveValues.push(serviceLine[1]); // saves predict expected move value in units
     });
 
     return {candlesArray, pipDecimals, predictMoveValues};

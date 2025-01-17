@@ -22,7 +22,7 @@ import * as echarts from 'echarts';
     EchartsxModule,
     MatRadioButton,
     MatRadioGroup,
-    FormsModule
+    FormsModule,
   ],
   styleUrl: './candles.component.css'
 })
@@ -64,6 +64,8 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
   private readonly targetLinesOpacity = 1;
   private readonly plotPaddingRight = 2;
 
+  isShowPredictChecked: boolean = true;
+
   private myChart: any;
 
   ngAfterViewInit() {
@@ -72,13 +74,13 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
       this.makeCandlesDataOutcomes(this.sourceData);
 
       this.upTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
-        + +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
+        + +this.predictMoveValue.toFixed(this.pipDecimals));
       this.dnTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
-        - +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
+        - +this.predictMoveValue.toFixed(this.pipDecimals));
 
       this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
 
-      if(!this.myChart) this.myChart = echarts.init(this.chartContainer.nativeElement);
+      if (!this.myChart) this.myChart = echarts.init(this.chartContainer.nativeElement);
 
       this.myChart.setOption(this.setChartOptions());
 
@@ -110,8 +112,19 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
       candleDummy[i] = '-';
     }
 
+    let dummiesValues: string[][] = [];
+    for (let i = 0; i < 2; i++) {
+      dummiesValues.push(JSON.parse(JSON.stringify(this.drawCandlesVariants[0][this.realDataLength - 1])));
+      if (i == 0) { // swap
+        dummiesValues[i][0] = (+dummiesValues[i][0] + +dummiesValues[i][1]).toString();
+        dummiesValues[i][1] = (+dummiesValues[i][0] - +dummiesValues[i][1]).toString();
+        dummiesValues[i][0] = (+dummiesValues[i][0] - +dummiesValues[i][1]).toString();
+      }
+    }
+
     for (let i = 0; i < this.forecastPeriod; i++) {
       this.drawCandlesVariants[2].push(rawData[this.realDataLength + i]);
+      // this.drawCandlesVariants[1].push(dummiesValues[i % 2]);
       this.drawCandlesVariants[1].push(candleDummy);
       this.drawCandlesVariants[0].push(rawData[this.realDataLength + this.forecastPeriod + i]);
     }
@@ -376,6 +389,10 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
     if (changes['chartNumber']) {
       this.ngAfterViewInit(); // redraw the chart
     }
+  }
+
+  toggleSlider() {
+    this.isShowPredictChecked = !this.isShowPredictChecked;
   }
 
 }
