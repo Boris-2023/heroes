@@ -71,8 +71,6 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
     setTimeout(() => { // to ensure the parent container size is received by the chart
       this.makeCandlesDataOutcomes(this.sourceData);
 
-      console.log("PipDecimals = " + this.pipDecimals + "\nPredict move value: " + this.predictMoveValue);
-
       this.upTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
         + +(this.predictMoveValue / Math.pow(10, this.pipDecimals)).toFixed(this.pipDecimals));
       this.dnTargetValue = +(+(this.drawCandlesVariants[0][this.realDataLength - 1][this.dataPosition])
@@ -89,7 +87,7 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
 
   private makeCandlesDataOutcomes(rawData: (number | string)[][]) {
 
-    this.realDataLength = rawData.length - (2 * this.forecastPeriod);
+    this.realDataLength = rawData.length - (2 * this.forecastPeriod) - 1; // -1 for service line which goes the last in every set
 
     // makes categories for whole the row including predict area
     this.categoryData = new Array(this.realDataLength + this.forecastPeriod + this.plotPaddingRight).fill(null).map((_, i) => i + 1);
@@ -216,7 +214,7 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
       title: {
         text: "Chart # " + this.chartNumber + " / " + this.totalNumberOfCharts,
         top: '1%',
-        left: '40%',
+        left: '45%',
       },
       tooltip: {
         trigger: 'item',// 'none' - cross & values on the axes, 'axis' - all values for xAxis coord
