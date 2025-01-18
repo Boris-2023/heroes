@@ -13,10 +13,13 @@
   <mat-radio-button style="margin-right: 20px" value='0'>Doubt</mat-radio-button>
 </mat-radio-group>
 
-<div class="slider" (click)="toggleSlider()">
-  <div class="slider-button"
-       [class.active]="isShowPredictChecked"
-  ></div>
+<div class="slider-container">
+  <div class="slider" (click)="toggleSlider()">
+    <div class="slider-button"
+         [class.active]="isShowPredictChecked"
+    ></div>
+  </div>
+  <div>Display sample forecast</div>
 </div>
 
 

@@ -42,8 +42,6 @@ export class QuestComponent implements OnInit {
 
     this.chartService = new ChartService();
 
-    console.log(this.predictMoveValues);
-
     this.loadWholeData();
 
     this.totalNumberOfCharts = this.wholeSourceData.length;

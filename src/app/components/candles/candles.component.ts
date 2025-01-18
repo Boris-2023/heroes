@@ -89,7 +89,7 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
 
   private makeCandlesDataOutcomes(rawData: (number | string)[][]) {
 
-    this.realDataLength = rawData.length - (2 * this.forecastPeriod) - 1; // -1 for service line which goes the last in every set
+    this.realDataLength = rawData.length - (3 * this.forecastPeriod) - 1; // -1 for service line which goes the last in every set
 
     // makes categories for whole the row including predict area
     this.categoryData = new Array(this.realDataLength + this.forecastPeriod + this.plotPaddingRight).fill(null).map((_, i) => i + 1);
@@ -102,7 +102,7 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
 
     // fill in draw variants with the same real data
     let stringValues = JSON.stringify(values);
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < 4; i++) {
       this.drawCandlesVariants[i] = JSON.parse(stringValues);
     }
 
@@ -112,35 +112,31 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
       candleDummy[i] = '-';
     }
 
-    let dummiesValues: string[][] = [];
-    for (let i = 0; i < 2; i++) {
-      dummiesValues.push(JSON.parse(JSON.stringify(this.drawCandlesVariants[0][this.realDataLength - 1])));
-      if (i == 0) { // swap
-        dummiesValues[i][0] = (+dummiesValues[i][0] + +dummiesValues[i][1]).toString();
-        dummiesValues[i][1] = (+dummiesValues[i][0] - +dummiesValues[i][1]).toString();
-        dummiesValues[i][0] = (+dummiesValues[i][0] - +dummiesValues[i][1]).toString();
-      }
-    }
-
     for (let i = 0; i < this.forecastPeriod; i++) {
-      this.drawCandlesVariants[2].push(rawData[this.realDataLength + i]);
-      // this.drawCandlesVariants[1].push(dummiesValues[i % 2]);
-      this.drawCandlesVariants[1].push(candleDummy);
-      this.drawCandlesVariants[0].push(rawData[this.realDataLength + this.forecastPeriod + i]);
+      for (let j = 0; j < 3; j++) { // for preset forecast outcomes
+        this.drawCandlesVariants[j].push(rawData[this.realDataLength + j * this.forecastPeriod + i]);
+      }
+      this.drawCandlesVariants[3].push(candleDummy); // no-display option
     }
 
     // right padding
     for (let i = 0; i < this.plotPaddingRight; i++) {
-      this.drawCandlesVariants[2].push(candleDummy);
-      this.drawCandlesVariants[1].push(candleDummy);
-      this.drawCandlesVariants[0].push(candleDummy);
+      for (let j = 0; j < 4; j++) {
+        this.drawCandlesVariants[j].push(candleDummy);
+      }
     }
 
   }
 
   private movingAverage(wnd: number) {
     let result: (number | string)[] = [];
-    const currentData = this.drawCandlesVariants[+this.predictDirection + 1]; // current data to draw candles: 0 -> dn predict, 1 -> no predict, 2 -> up predict
+
+    let currentData: any[];
+    if (this.isShowPredictChecked) {
+      currentData = this.drawCandlesVariants[+this.predictDirection + 1]; // current data to draw candles: 0 -> dn predict, 1 -> no predict, 2 -> up predict
+    } else {
+      currentData = this.drawCandlesVariants[3]; // dummies if no show predict
+    }
 
     let sum = 0;
     for (let i = 0; i < (wnd - 1); i++) {
@@ -222,6 +218,13 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
   }
 
   private setChartOptions() {
+    let currentCandlesData: string[];
+    if (this.isShowPredictChecked) { // variants: -1 -> down predict, 0 -> no predict, 1 -> up predict
+      currentCandlesData = this.drawCandlesVariants[+this.predictDirection + 1];
+    } else {
+      currentCandlesData = this.drawCandlesVariants[3];
+    }
+
     let options: EChartsOption = {
       backgroundColor: this.chartBgColor,
       title: {
@@ -310,7 +313,8 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
         {
           name: 'Data',
           type: 'candlestick',
-          data: this.drawCandlesVariants[+this.predictDirection + 1], // variants: -1 -> down predict, 0 -> no predict, 1 -> up predict
+          data: currentCandlesData, // see in the beginning of the method
+          // data: this.drawCandlesVariants[+this.predictDirection + 1], // variants: -1 -> down predict, 0 -> no predict, 1 -> up predict
           itemStyle: {
             color: this.upColor,
             color0: this.downColor,
@@ -379,7 +383,6 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
   onPredictDirectionChange() {
     this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
     this.myChart.setOption(this.setChartOptions());
-    this.myChart.resize();
 
     this.predictDirectionChange.emit(this.predictDirection);
   }
@@ -393,6 +396,8 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
 
   toggleSlider() {
     this.isShowPredictChecked = !this.isShowPredictChecked;
+    this.linesToDraw = this.formAveragesDrawSet(this.avesWndList);
+    this.myChart.setOption(this.setChartOptions());
   }
 
 }

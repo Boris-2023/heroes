@@ -1,5 +1,5 @@
 .c-container {
-  height: 500px;
+  height: 700px;
   width: 100%;
   margin: 10px;
   border: 3px solid rgba(0, 100, 0, 0.20);
@@ -15,7 +15,7 @@
 
 .chart-list-button {
   font-weight: bold;
-  font-size: 22px;
+  font-size: 32px;
   font-family: "Calibri", sans-serif;
   background-color: rgba(10, 87, 1, 0.40);
   color: #063601;

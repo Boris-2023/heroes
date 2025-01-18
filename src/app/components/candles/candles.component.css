@@ -8,19 +8,27 @@
 
 .radio-buttons-predict-choice-group {
   color: #004200;
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
   display: flex;
   justify-content: center;
-  margin-top: 5px;
+  margin-top: 20px;
+}
+
+.slider-container {
+  font-size: 24px;
+  font-weight: bold;
+  color: #004200;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 .slider {
   width: 60px;
   height: 30px;
-  margin-top: 10px;
-  position: absolute;
-  left: 50%;
   transform: translate(-50%);
   background-color: #f6f6f6;
   border-style: solid;
@@ -28,24 +36,22 @@
   border-radius: 15px;
   border-color: rgba(0, 66, 0, 0.5);
   cursor: pointer;
-  font-size: 22px;
-  font-weight: bold;
-  color: #004200;
+  margin-right: -20px;
 }
 
 .slider-button {
   width: 26px;
   height: 26px;
-  background-color: rgba(39, 173, 44, 0.37);
+  background-color: rgba(3, 159, 8, 0.37);
   border-radius: 50%;
   position: absolute;
   top: 2px;
-  left: 2px;
+  left: 3px;
   transition: 0.3s;
   justify-content: center;
 }
 
 .slider-button.active {
   left: calc(100% - 29px);
-  background-color: #028f02;
+  background-color: #00a800;
 }
