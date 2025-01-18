@@ -231,6 +231,10 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
         text: "Chart # " + this.chartNumber + " / " + this.totalNumberOfCharts,
         top: '1%',
         left: '45%',
+        textStyle: {
+          fontSize: 28,
+          fontWeight: 'bold',
+        }
       },
       tooltip: {
         trigger: 'item',// 'none' - cross & values on the axes, 'axis' - all values for xAxis coord
@@ -245,10 +249,10 @@ export class CandlesComponent implements AfterViewInit, OnChanges {
           ...this.linesToDraw.map(x => x.name),// add lines names, like averages
         ],
         bottom: '1.5%',
-        itemHeight: 10,
+        itemHeight: 15,
         borderColor: 'rgb(0, 100, 0)',
         borderWidth: .5,
-        borderRadius: 3,
+        borderRadius: 5,
       },
       grid: {
         top: '8%',
