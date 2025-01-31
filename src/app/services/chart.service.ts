@@ -1,4 +1,5 @@
 import {candlesData} from '../../../public/candle-chart-data-02';
+import {tickers} from '../../../public/tickers';
 
 export class ChartService {
 
@@ -20,5 +21,9 @@ export class ChartService {
     });
 
     return {candlesArray, pipDecimals, predictMoveValues};
+  }
+
+  public getTickersAvailable(){
+    return tickers;
   }
 }

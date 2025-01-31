@@ -1,3 +1,4 @@
+<!--<button mat-button (click)="openSettings()">Open Settings</button>-->
 <div class="c-container">
   <candles
     *ngIf="isDataLoaded()"
@@ -17,6 +18,8 @@
   <button class="chart-list-button" (click)="clickNext()">NEXT</button>
 </div>
 
+<!-- service lines -->
 <p>Chart Num: {{ chartNumber }}</p>
 <p>Direction: {{ predictDirectionArray[chartNumber - 1] }}</p>
+<p *ngIf="result">Result: {{ result | json }}</p>
 

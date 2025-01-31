@@ -1,0 +1,103 @@
+<div mat-dialog-title class="popup-title" xmlns="http://www.w3.org/1999/html">Quest settings</div>
+<mat-dialog-content class="popup-dialog-box">
+
+  <div class="popup-menu-item">1. Number of charts:</div>
+  <form class="popup-form">
+    <mat-form-field class="popup-mat-field"
+                    hintLabel="units"
+                    appearance="fill"
+    >
+      <mat-label>Total</mat-label>
+      <input matInput
+             class="popup-input"
+             type="number"
+             [(ngModel)]="data.totalChartsNum"
+             name="total number of charts"
+             required
+      >
+    </mat-form-field>
+    <mat-form-field class="popup-mat-field"
+                    hintLabel="units"
+                    appearance="fill"
+    >
+      <mat-label>Test</mat-label>
+      <input matInput
+             class="popup-input"
+             type="number"
+             [(ngModel)]="data.testChartsNum"
+             name="test charts number"
+             required
+      >
+    </mat-form-field>
+    <mat-form-field class="popup-mat-field"
+                    hintLabel="units"
+                    appearance="fill"
+    >
+      <mat-label>Edge</mat-label>
+      <input matInput
+             class="popup-input"
+             type="number"
+             [(ngModel)]="data.edgeChartsNum"
+             name="edge charts number"
+             required
+      >
+    </mat-form-field>
+  </form>
+
+  <div class="popup-menu-item">2. Periods:</div>
+  <form class="popup-form">
+    <mat-form-field class="popup-mat-field"
+                    hintLabel="hours"
+                    appearance="fill"
+    >
+      <mat-label>Deal length</mat-label>
+      <input matInput
+             class="popup-input"
+             type="number"
+             [(ngModel)]="data.dealDuration"
+             name="dealDuration"
+             required
+      >
+    </mat-form-field>
+    <mat-form-field class="popup-mat-field"
+                    hintLabel="candles"
+                    appearance="fill"
+    >
+      <mat-label>Look ahead</mat-label>
+      <input matInput
+             class="popup-input"
+             type="number"
+             [(ngModel)]="data.forecastPeriod"
+             name="barsAhead"
+             required
+      >
+    </mat-form-field>
+  </form>
+
+  <div class="popup-menu-item">3. Tickers:</div>
+  <form class="popup-form">
+    <mat-selection-list
+      [(ngModel)]="data.tickersSelected"
+      [ngModelOptions]="{standalone: true}"
+      multiple
+      style="display: compact; justify-content: space-evenly;"
+    >
+      <div class="grid-container">
+        <mat-list-option
+          class="grid-item"
+          *ngFor="let ticker of data.tickers"
+          [value]="ticker"
+        >
+          {{ ticker }}
+        </mat-list-option>
+      </div>
+    </mat-selection-list>
+  </form>
+
+</mat-dialog-content>
+<mat-dialog-actions class="popup-buttons">
+  <button class="popup-button" mat-button (click)="onCancel()">Exit</button>
+  <button class="popup-button" mat-button [mat-dialog-close]="data" (click)="onProceed()" cdkFocusInitial>Proceed
+  </button>
+</mat-dialog-actions>
+

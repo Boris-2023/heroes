@@ -1,0 +1,86 @@
+.popup-title {
+  font-size: 26px;
+  color: #004200;
+  font-weight: bolder;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+}
+
+.popup-dialog-box {
+  background: rgba(10, 87, 1, 0.40);
+  font-size: 18px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.popup-menu-item {
+  margin-top: 10px;
+  font-size: 18px;
+  font-weight: bolder
+}
+
+.popup-mat-field {
+  font-size: 18px;
+  font-weight: bolder;
+  margin: 10px;
+  width: 150px;
+  background: rgb(214, 255, 206);
+  border-radius: 5px;
+}
+
+.popup-form {
+  display: flex;
+  justify-content: space-evenly
+}
+
+.popup-input {
+  color: black !important;
+  text-align: center;
+}
+
+.popup-buttons {
+  margin-left: 25px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.popup-button {
+  font-weight: bold;
+  font-size: 24px;
+  font-family: "Calibri", sans-serif;
+  background-color: rgba(10, 87, 1, 0.40);
+  color: #063601;
+  width: 40%;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.popup-button:hover {
+  color: white;
+  background-color: #0a5701;
+}
+
+.popup-button:active {
+  background-color: green;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 160px)); /* Adjust minmax for item size */
+  gap: 10px; /* Space between items */
+  padding: 5px;
+  background-color: transparent;
+  height: auto; /* Full viewport height */
+  width: 500px; /* Full viewport height */
+}
+
+.grid-item {
+  background-color: rgb(214, 255, 206);
+  color: #004200;
+  text-align: center;
+  border-radius: 5px;
+  font-size: 15px;
+  font-weight: bolder;
+}

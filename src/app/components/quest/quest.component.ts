@@ -1,12 +1,14 @@
 /*
  * Created by bvasiliev on 25.11.2024
 */
-import {NgIf} from '@angular/common';
+import {JsonPipe, NgIf} from '@angular/common';
 import {Component, OnInit} from '@angular/core';
 import {FormsModule} from '@angular/forms';
+import {MatDialog} from '@angular/material/dialog';
 import {EchartsxModule} from 'echarts-for-angular';
 import {CandlesComponent} from '../candles/candles.component';
 import {ChartService} from '../../services/chart.service';
+import {DialogData, PopupSettingsComponent} from '../popup-settings/popup-settings.component';
 
 @Component({
   selector: "quest",
@@ -16,6 +18,7 @@ import {ChartService} from '../../services/chart.service';
     NgIf,
     FormsModule,
     EchartsxModule,
+    JsonPipe,
   ],
   standalone: true,
   styleUrl: './quest.component.css'
@@ -23,12 +26,16 @@ import {ChartService} from '../../services/chart.service';
 
 export class QuestComponent implements OnInit {
 
+  result: DialogData | undefined;
+
   // ------> data to input / request
+  public isSettingsStart = true;
   public movingAvesList = [3, 5, 8, 21, 34]; // choice of the user in selection component
   public forecastPeriod = 20;
   public dataPosition: number = 1;
 
   public wholeSourceData: any[] = [];
+  public tickers: string[] = [];
   public predictDirectionArray: string[] = [];
   public predictMoveValues: number[] = [];
   public pipDecimalValues: number[] = [];
@@ -38,9 +45,11 @@ export class QuestComponent implements OnInit {
   public currentData: any[][] = [];
   public chartService: ChartService;
 
-  constructor() {
+
+  constructor(public dialog: MatDialog) {
 
     this.chartService = new ChartService();
+    this.tickers = this.chartService.getTickersAvailable();
 
     this.loadWholeData();
 
@@ -52,6 +61,8 @@ export class QuestComponent implements OnInit {
   }
 
   ngOnInit() {
+    if (this.isSettingsStart) this.openDialogSettings();
+
     this.currentData = this.provideCurrentData();
   }
 
@@ -74,12 +85,31 @@ export class QuestComponent implements OnInit {
   public clickNext() {
     this.chartNumber = this.chartNumber === this.totalNumberOfCharts ? 1 : (this.chartNumber + 1);
     this.currentData = this.provideCurrentData();
+
+    this.isSettingsStart = false;
   }
 
   // click back button
   public clickBack() {
     this.chartNumber = this.chartNumber === 1 ? this.totalNumberOfCharts : (this.chartNumber - 1);
     this.currentData = this.provideCurrentData();
+  }
+
+  openDialogSettings(): void {
+    const dialogRef = this.dialog.open(PopupSettingsComponent, {
+      width: '700px',
+      height: 'auto',
+      data: {
+        totalChartsNum: 30, testChartsNum: 3, edgeChartsNum: 3, dealDuration: 24, forecastPeriod: 20, tickers: this.tickers, tickersSelected: ''
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.result = result;
+        console.log('Settings dialog result: ', result);
+      }
+    });
   }
 
 }
